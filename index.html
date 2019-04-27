@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Secure KAT Black Belts Database</title>
+    <script src="web3.js/dist/web3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+        crossorigin="anonymous">
+
+    <script type="text/javascript">
+        var contract_address = "0x4B39691Aa835473078F40140509De6FfeC6ba500";
+        var contract_abi = [{ "constant": true, "inputs": [{ "name": "currentBBNum", "type": "uint256" }], "name": "getRecordDate", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "hashToSet", "type": "string" }], "name": "setHash", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "kill", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "newbbNum", "type": "uint256" }, { "name": "newbbDate", "type": "string" }, { "name": "newbbName", "type": "string" }], "name": "setRecord", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "getHash", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "currentBBNum", "type": "uint256" }], "name": "getRecordName", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }];
+        
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+        }
+
+        var contract_instance = web3.eth.contract(contract_abi).at(contract_address);
+
+        function verifyBlackbelt() {
+            var blackbeltNumber = web3.toBigNumber(document.getElementById("inputNameBlackbeltNumber").value);
+            contract_instance.getRecordName(blackbeltNumber, function (error, result) {
+                if (error) {
+                    document.getElementById("lblNameText").innerText = error;
+                } else {
+                    document.getElementById("lblNameText").innerText = result;
+                }
+            });
+
+            contract_instance.getRecordDate(blackbeltNumber, function (error, result) {
+                if (error) {
+                    document.getElementById("lblRecordDateText").innerText = error;
+                } else {
+                    document.getElementById("lblRecordDateText").innerText = result;
+                }
+            });
+
+            contract_instance.getHash(function (error, result) {
+                if (error) {
+                    document.getElementById("lblHashText").innerText = error;
+                } else {
+                    document.getElementById("lblHashText").innerText = result;
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <br/>
+    <p> Welcome to KAT's secure distributed black belt database. You can enter a KAT black belt number (not Kukkiwon) below and click 'Verify Blackbelt'. Most have not yet been added due to cost, but you can try number 214 as an example.  </p>
+    <p></p>
+    <p>Accessing the data is free, but you must first connect to the blockchain. We recommend using <a href="https://metamask.io/">Metamask</a>, which is a free extension for Google Chrome.</p>
+    <p></p>
+    <p>If you would like to learn more or interact with the contract and ABI directly (to avoid having to trust this site) the details are at <a href="http://www.coloradomanews.com/local-academy-becomes-worlds-first-martial-arts-school-to-secure-black-belt-records-on-blockchain/">Colorado Martial Arts News</a>.</p>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="col-lg-8">
+                    <div class="panel panel-default panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">KAT Blackbelt in Ethereum Blockchain:</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="inputNameBlackbeltNumber">Blackbelt Number</label>
+                                    <input type="text" name="inputNameBlackbeltNumber" class="form-control" id="inputNameBlackbeltNumber" placeholder="e.g. 823501254"> 
+                                </div>
+                            </form>
+                        </div>
+                        <div class="panel-footer">
+                            <button type="button" class="btn btn-default" onclick="verifyBlackbelt();return false;">Verify Blackbelt </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+
+    <div id="divResults" class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="col-lg-8">
+                    <div class="panel panel-default panel-primary">
+                        <div class="panel-body">
+                            <form>
+                                <div class="form-group">
+                                    <label id="lblName">Name:</label>
+                                    <label id="lblNameText"></label>
+                                </div>
+                                <div class="form-group">
+                                    <label id="lblRecordDate">Record Date:</label>
+                                    <label id="lblRecordDateText"></label>
+                                </div>
+                                <div class="form-group">
+                                        <label id="lblHash">Record Date:</label>
+                                        <label id="lblHashText"></label>
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
